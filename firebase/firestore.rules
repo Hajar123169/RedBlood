@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.role == 'admin';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Anyone can read basic user profiles
+      // Only the user or an admin can write to their own profile
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId) || isAdmin();
+      
+      // Private user data subcollection
+      match /private/{document=**} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+    }
+    
+    // Blood donation requests
+    match /requests/{requestId} {
+      // Anyone authenticated can read requests
+      // Only the creator or an admin can update/delete
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || isAdmin());
+    }
+    
+    // Donations
+    match /donations/{donationId} {
+      // Anyone authenticated can read donations
+      // Only the donor, recipient, or admin can update
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && 
+        (resource.data.donorId == request.auth.uid || 
+         resource.data.recipientId == request.auth.uid || 
+         isAdmin());
+    }
+    
+    // Blood inventory (admin only)
+    match /inventory/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // System settings (admin only)
+    match /settings/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // Notifications
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && 
+        resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || isAdmin());
+    }
+  }
+}

@@ -8,12 +8,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from '../contexts/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 
-// Import stack navigators for each tab
-import HomeScreen from '../screens/HomeScreen';
-// Note: These will be created later or can be simple placeholder components for now
-const DonationNavigator = () => null;
-const RequestNavigator = () => null;
-const ProfileNavigator = () => null;
+// Import screens
+import HomeScreen from '../screens/common/HomeScreen';
+import SearchScreen from '../screens/SearchScreen';
+import DonationsScreen from '../screens/DonationsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 // Create bottom tab navigator
 const Tab = createBottomTabNavigator();
@@ -31,10 +30,10 @@ const TabNavigator = () => {
           // Set icon based on route name
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Donate') {
+          } else if (route.name === 'Search') {
+            iconName = focused ? 'search' : 'search-outline';
+          } else if (route.name === 'Donations') {
             iconName = focused ? 'water' : 'water-outline';
-          } else if (route.name === 'Requests') {
-            iconName = focused ? 'alert-circle' : 'alert-circle-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
           }
@@ -71,24 +70,24 @@ const TabNavigator = () => {
       />
 
       <Tab.Screen 
-        name="Donate" 
-        component={DonationNavigator} 
+        name="Search" 
+        component={SearchScreen} 
         options={{
-          title: 'Donate Blood',
+          title: 'Find Donors',
         }}
       />
 
       <Tab.Screen 
-        name="Requests" 
-        component={RequestNavigator} 
+        name="Donations" 
+        component={DonationsScreen} 
         options={{
-          title: 'Blood Requests',
+          title: 'Donations',
         }}
       />
 
       <Tab.Screen 
         name="Profile" 
-        component={ProfileNavigator} 
+        component={ProfileScreen} 
         options={{
           title: 'My Profile',
         }}
