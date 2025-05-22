@@ -22,6 +22,9 @@ const ProfileScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [locationEnabled, setLocationEnabled] = useState(true);
 
+  // Check if user is admin (in a real app, this would be part of the user object)
+  const isAdmin = user?.email === 'admin@redblood.com' || user?.role === 'admin';
+
   // Handle logout
   const handleLogout = async () => {
     Alert.alert(
@@ -68,7 +71,7 @@ const ProfileScreen = () => {
           <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
       )}
-      
+
       {/* Profile Header */}
       <View style={[styles.profileHeader, { backgroundColor: theme.colors.primary }]}>
         <View style={styles.profileImageContainer}>
@@ -82,32 +85,32 @@ const ProfileScreen = () => {
             <Ionicons name="camera" size={20} color={theme.colors.primary} />
           </TouchableOpacity>
         </View>
-        
+
         <Text style={[styles.userName, { color: theme.colors.white }]}>
           {user?.firstName} {user?.lastName}
         </Text>
-        
+
         <View style={[styles.bloodTypeBadge, { backgroundColor: theme.colors.white }]}>
           <Text style={[styles.bloodTypeText, { color: theme.colors.primary }]}>
             {user?.bloodType || 'Unknown'}
           </Text>
         </View>
       </View>
-      
+
       {/* Blood Type Information */}
       <View style={[styles.section, { borderColor: theme.colors.border }]}>
         <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
           Blood Type Information
         </Text>
-        
+
         <Text style={[styles.bloodTypeDescription, { color: theme.colors.textSecondary }]}>
           {bloodGroupDescription}
         </Text>
-        
+
         <Text style={[styles.compatibilityTitle, { color: theme.colors.text }]}>
           You can donate to:
         </Text>
-        
+
         <View style={styles.compatibilityList}>
           {compatibleRecipients.map(bloodType => (
             <View 
@@ -121,7 +124,7 @@ const ProfileScreen = () => {
           ))}
         </View>
       </View>
-      
+
       {/* Personal Information */}
       <View style={[styles.section, { borderColor: theme.colors.border }]}>
         <View style={styles.sectionHeader}>
@@ -132,7 +135,7 @@ const ProfileScreen = () => {
             <Text style={[styles.editText, { color: theme.colors.primary }]}>Edit</Text>
           </TouchableOpacity>
         </View>
-        
+
         <View style={styles.infoRow}>
           <Ionicons name="mail-outline" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Email:</Text>
@@ -140,7 +143,7 @@ const ProfileScreen = () => {
             {user?.email || 'Not provided'}
           </Text>
         </View>
-        
+
         <View style={styles.infoRow}>
           <Ionicons name="call-outline" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Phone:</Text>
@@ -148,7 +151,7 @@ const ProfileScreen = () => {
             {user?.phone || 'Not provided'}
           </Text>
         </View>
-        
+
         <View style={styles.infoRow}>
           <Ionicons name="location-outline" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Address:</Text>
@@ -157,13 +160,13 @@ const ProfileScreen = () => {
           </Text>
         </View>
       </View>
-      
+
       {/* Settings */}
       <View style={[styles.section, { borderColor: theme.colors.border }]}>
         <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
           Settings
         </Text>
-        
+
         <View style={styles.settingRow}>
           <View style={styles.settingInfo}>
             <Ionicons name="notifications-outline" size={20} color={theme.colors.textSecondary} />
@@ -178,7 +181,7 @@ const ProfileScreen = () => {
             thumbColor={theme.colors.white}
           />
         </View>
-        
+
         <View style={styles.settingRow}>
           <View style={styles.settingInfo}>
             <Ionicons name="location-outline" size={20} color={theme.colors.textSecondary} />
@@ -193,7 +196,7 @@ const ProfileScreen = () => {
             thumbColor={theme.colors.white}
           />
         </View>
-        
+
         <TouchableOpacity 
           style={styles.settingRow}
           onPress={() => Alert.alert('Change Password', 'This feature will be available soon.')}
@@ -207,7 +210,29 @@ const ProfileScreen = () => {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
         </TouchableOpacity>
       </View>
-      
+
+      {/* Admin Section - Only visible to admin users */}
+      {isAdmin && (
+        <View style={[styles.section, { borderColor: theme.colors.border }]}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+            Admin Controls
+          </Text>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => navigation.navigate('Admin', { screen: 'AdminDashboard' })}
+          >
+            <View style={styles.settingInfo}>
+              <Ionicons name="shield-checkmark-outline" size={20} color={theme.colors.textSecondary} />
+              <Text style={[styles.settingText, { color: theme.colors.text }]}>
+                Admin Dashboard
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Logout Button */}
       <TouchableOpacity 
         style={[styles.logoutButton, { borderColor: theme.colors.error }]}
@@ -218,7 +243,7 @@ const ProfileScreen = () => {
           Logout
         </Text>
       </TouchableOpacity>
-      
+
       {/* App Version */}
       <Text style={[styles.versionText, { color: theme.colors.textSecondary }]}>
         RedBlood App v1.0.0

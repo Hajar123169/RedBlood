@@ -15,13 +15,13 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import * as userAPI from '../api/userAPI';
 
-const DonationsScreen = ({ navigation }) => {
+const DonationsScreen = ({ navigation, route }) => {
   const { theme } = useTheme();
   const { user } = useAuth();
   const [donations, setDonations] = useState([]);
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('donations');
+  const [activeTab, setActiveTab] = useState(route.params?.initialTab || 'donations');
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [scheduleDate, setScheduleDate] = useState('');
   const [scheduleLocation, setScheduleLocation] = useState('');
@@ -33,7 +33,7 @@ const DonationsScreen = ({ navigation }) => {
       try {
         const donationsData = await userAPI.getDonationHistory();
         setDonations(donationsData);
-        
+
         const requestsData = await userAPI.getRequestHistory();
         setRequests(requestsData);
       } catch (error) {
@@ -47,16 +47,12 @@ const DonationsScreen = ({ navigation }) => {
   }, []);
 
   const handleScheduleDonation = () => {
-    // Validate inputs
-    if (!scheduleDate || !scheduleLocation) {
-      alert('Please fill in all fields');
-      return;
-    }
+    // Navigate to the donation schedule screen
+    navigation.navigate('DonationSchedule');
 
-    // In a real app, this would call an API to schedule the donation
-    alert('Donation scheduled successfully!');
+    // Close the modal if it's open
     setShowScheduleModal(false);
-    
+
     // Reset form
     setScheduleDate('');
     setScheduleLocation('');
@@ -78,7 +74,7 @@ const DonationsScreen = ({ navigation }) => {
           </Text>
         </View>
       </View>
-      
+
       <View style={styles.cardDetails}>
         <View style={styles.detailRow}>
           <Ionicons name="calendar-outline" size={16} color={theme.colors.textSecondary} />
@@ -86,14 +82,14 @@ const DonationsScreen = ({ navigation }) => {
             {item.date}
           </Text>
         </View>
-        
+
         <View style={styles.detailRow}>
           <Ionicons name="location-outline" size={16} color={theme.colors.textSecondary} />
           <Text style={[styles.detailText, { color: theme.colors.textSecondary }]}>
             {item.location}
           </Text>
         </View>
-        
+
         <View style={styles.detailRow}>
           <Ionicons name="water-outline" size={16} color={theme.colors.textSecondary} />
           <Text style={[styles.detailText, { color: theme.colors.textSecondary }]}>
@@ -122,7 +118,7 @@ const DonationsScreen = ({ navigation }) => {
           </Text>
         </View>
       </View>
-      
+
       <View style={styles.cardDetails}>
         <View style={styles.detailRow}>
           <Ionicons name="calendar-outline" size={16} color={theme.colors.textSecondary} />
@@ -130,14 +126,14 @@ const DonationsScreen = ({ navigation }) => {
             {item.date}
           </Text>
         </View>
-        
+
         <View style={styles.detailRow}>
           <Ionicons name="medkit-outline" size={16} color={theme.colors.textSecondary} />
           <Text style={[styles.detailText, { color: theme.colors.textSecondary }]}>
             {item.hospital}
           </Text>
         </View>
-        
+
         <View style={styles.detailRow}>
           <Ionicons name="alert-circle-outline" size={16} color={theme.colors.textSecondary} />
           <Text style={[styles.detailText, { color: theme.colors.textSecondary }]}>
@@ -188,7 +184,7 @@ const DonationsScreen = ({ navigation }) => {
             My Donations
           </Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[
             styles.tabButton,
@@ -234,7 +230,7 @@ const DonationsScreen = ({ navigation }) => {
       {activeTab === 'donations' ? (
         <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: theme.colors.primary }]}
-          onPress={() => setShowScheduleModal(true)}
+          onPress={() => navigation.navigate('DonationSchedule')}
         >
           <Ionicons name="calendar" size={24} color={theme.colors.white} />
           <Text style={[styles.actionButtonText, { color: theme.colors.white }]}>
@@ -265,7 +261,7 @@ const DonationsScreen = ({ navigation }) => {
             <Text style={[styles.modalTitle, { color: theme.colors.text }]}>
               Schedule Blood Donation
             </Text>
-            
+
             <Text style={[styles.inputLabel, { color: theme.colors.text }]}>Date</Text>
             <TextInput
               style={[styles.input, { 
@@ -278,7 +274,7 @@ const DonationsScreen = ({ navigation }) => {
               value={scheduleDate}
               onChangeText={setScheduleDate}
             />
-            
+
             <Text style={[styles.inputLabel, { color: theme.colors.text }]}>Location</Text>
             <TextInput
               style={[styles.input, { 
@@ -291,7 +287,7 @@ const DonationsScreen = ({ navigation }) => {
               value={scheduleLocation}
               onChangeText={setScheduleLocation}
             />
-            
+
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, { borderColor: theme.colors.primary }]}
@@ -301,7 +297,7 @@ const DonationsScreen = ({ navigation }) => {
                   Cancel
                 </Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
                 style={[styles.modalButton, { backgroundColor: theme.colors.primary }]}
                 onPress={handleScheduleDonation}

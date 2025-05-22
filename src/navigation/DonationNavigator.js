@@ -3,18 +3,18 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '../contexts/ThemeContext';
 
 // Import screens
-import AdminDashboardScreen from '../screens/admin/AdminDashboardScreen';
-import DonorDetailScreen from '../screens/donor/DonorDetailScreen';
+import DonationsScreen from '../screens/DonationsScreen';
+import DonationScheduleScreen from '../screens/donation/DonationScheduleScreen';
 
 // Create stack navigator
 const Stack = createStackNavigator();
 
-const AdminNavigator = () => {
+const DonationNavigator = () => {
   const { theme } = useTheme();
 
   return (
     <Stack.Navigator
-      initialRouteName="AdminDashboard"
+      initialRouteName="DonationsList"
       screenOptions={{
         headerStyle: {
           backgroundColor: theme.colors.primary,
@@ -29,22 +29,23 @@ const AdminNavigator = () => {
       }}
     >
       <Stack.Screen 
-        name="AdminDashboard" 
-        component={AdminDashboardScreen} 
+        name="DonationsList" 
+        component={DonationsScreen} 
         options={{ 
-          title: 'Admin Dashboard',
+          title: 'Donations',
+          headerShown: false, // Hide header for the main tab screen
         }} 
       />
 
       <Stack.Screen 
-        name="DonorDetail" 
-        component={DonorDetailScreen} 
+        name="DonationSchedule" 
+        component={DonationScheduleScreen} 
         options={{ 
-          title: 'Donor Details',
+          title: 'Schedule Donation',
         }} 
       />
     </Stack.Navigator>
   );
 };
 
-export default AdminNavigator;
+export default DonationNavigator;

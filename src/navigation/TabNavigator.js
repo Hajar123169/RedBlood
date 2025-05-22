@@ -10,9 +10,11 @@ import { Ionicons } from '@expo/vector-icons';
 
 // Import screens
 import HomeScreen from '../screens/common/HomeScreen';
-import SearchScreen from '../screens/SearchScreen';
-import DonationsScreen from '../screens/DonationsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+
+// Import navigators
+import DonationNavigator from './DonationNavigator';
+import SearchNavigator from './SearchNavigator';
 
 // Create bottom tab navigator
 const Tab = createBottomTabNavigator();
@@ -71,7 +73,7 @@ const TabNavigator = () => {
 
       <Tab.Screen 
         name="Search" 
-        component={SearchScreen} 
+        component={SearchNavigator} 
         options={{
           title: 'Find Donors',
         }}
@@ -79,7 +81,7 @@ const TabNavigator = () => {
 
       <Tab.Screen 
         name="Donations" 
-        component={DonationsScreen} 
+        component={DonationNavigator} 
         options={{
           title: 'Donations',
         }}

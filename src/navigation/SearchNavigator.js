@@ -3,18 +3,19 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '../contexts/ThemeContext';
 
 // Import screens
-import AdminDashboardScreen from '../screens/admin/AdminDashboardScreen';
+import SearchScreen from '../screens/SearchScreen';
+import CreateRequestScreen from '../screens/request/CreateRequestScreen';
 import DonorDetailScreen from '../screens/donor/DonorDetailScreen';
 
 // Create stack navigator
 const Stack = createStackNavigator();
 
-const AdminNavigator = () => {
+const SearchNavigator = () => {
   const { theme } = useTheme();
 
   return (
     <Stack.Navigator
-      initialRouteName="AdminDashboard"
+      initialRouteName="SearchDonors"
       screenOptions={{
         headerStyle: {
           backgroundColor: theme.colors.primary,
@@ -29,10 +30,19 @@ const AdminNavigator = () => {
       }}
     >
       <Stack.Screen 
-        name="AdminDashboard" 
-        component={AdminDashboardScreen} 
+        name="SearchDonors" 
+        component={SearchScreen} 
         options={{ 
-          title: 'Admin Dashboard',
+          title: 'Find Donors',
+          headerShown: false, // Hide header for the main tab screen
+        }} 
+      />
+
+      <Stack.Screen 
+        name="CreateRequest" 
+        component={CreateRequestScreen} 
+        options={{ 
+          title: 'Create Blood Request',
         }} 
       />
 
@@ -47,4 +57,4 @@ const AdminNavigator = () => {
   );
 };
 
-export default AdminNavigator;
+export default SearchNavigator;

@@ -6,10 +6,14 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import AuthNavigator from './AuthNavigator';
 import TabNavigator from './TabNavigator';
+import AdminNavigator from './AdminNavigator';
+
+const Stack = createStackNavigator();
 
 const AppNavigator = () => {
     const { isAuthenticated, loading } = useAuth();
@@ -38,7 +42,14 @@ const AppNavigator = () => {
             />
 
             {/* Conditionally render auth flow or main app flow based on authentication status */}
-            {isAuthenticated ? <TabNavigator /> : <AuthNavigator />}
+            {isAuthenticated ? (
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="Main" component={TabNavigator} />
+                    <Stack.Screen name="Admin" component={AdminNavigator} />
+                </Stack.Navigator>
+            ) : (
+                <AuthNavigator />
+            )}
         </NavigationContainer>
     );
 };
